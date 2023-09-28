@@ -6,15 +6,28 @@ class ApplicationController < ActionController::API
     end
   
     def authorize_request
+      # debugger
       header = request.headers['Authorization']
       header = header.split(' ').last if header
-      begin
-        @decoded = JsonWebToken.decode(header)
-        @current_user = User.find(@decoded[:user_id])
-      rescue ActiveRecord::RecordNotFound => e
-        render json: { errors: e.message }, status: :unauthorized
-      rescue JWT::DecodeError => e
-        render json: { errors: e.message }, status: :unauthorized
+      if params[:user_id].present?
+        begin
+          @decoded = JsonWebToken.decode(header)
+          @current_user = User.find(@decoded[:user_id])
+        rescue ActiveRecord::RecordNotFound => e
+          render json: { errors: e.message }, status: :unauthorized
+        rescue JWT::DecodeError => e
+          render json: { errors: e.message }, status: :unauthorized
+        end
+        
+      elsif params[:admin_id].present?
+        begin
+          @decoded = JsonWebToken.decode(header)
+          @current_user = Admin.find(@decoded[:admin_id])
+        rescue ActiveRecord::RecordNotFound => e
+          render json: { errors: e.message }, status: :unauthorized
+        rescue JWT::DecodeError => e
+          render json: { errors: e.message }, status: :unauthorized
+        end
       end
     end
 end
