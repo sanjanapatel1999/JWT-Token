@@ -13,7 +13,7 @@ class AuthenticationController < ApplicationController
       else
         render json: { error: 'unauthorized' }, status: :unauthorized
       end
-      
+
     elsif Admin.find_by_email(params[:email])
       debugger
       @admin = Admin.find_by_email(params[:email])
@@ -22,6 +22,17 @@ class AuthenticationController < ApplicationController
         time = Time.now + 24.hours.to_i
         render json: { token: token, exp: time.strftime("%m-%d-%Y %H:%M"),
                        username: @admin.username }, status: :ok
+      else
+        render json: { error: 'unauthorized' }, status: :unauthorized
+      end
+
+    elsif Supplier.find_by_email(params[:email])
+      @supplier = Supplier.find_by_email(params[:email])
+      if @supplier&.authenticate(params[:password])
+        token = JsonWebToken.encode(supplier_id: @supplier.id)
+        time = Time.now + 24.hours.to_i
+        render json: { token: token, exp: time.strftime("%m-%d-%Y %H:%M"),
+                       username: @supplier.username }, status: :ok
       else
         render json: { error: 'unauthorized' }, status: :unauthorized
       end

@@ -15,7 +15,7 @@ class Admin::AdminsController < ApplicationController
   
     # POST /admins
     def create
-      @admin = Admin.new(admin_params)
+      @admin = Admin.new(admin_params) 
       if @admin.save
         render json: @admin, status: :created
       else
@@ -40,14 +40,12 @@ class Admin::AdminsController < ApplicationController
     private
   
     def find_admin
-      @admin = Admin.find_by_adminname!(params[:__username])
+      @admin = Admin.find_by_username!(params[:_username])
       rescue ActiveRecord::RecordNotFound
         render json: { errors: 'admin not found' }, status: :not_found
     end
   
     def admin_params
-      params.permit(
-        :avatar, :name, :username, :email, :password, :password_confirmation
-      )
+      params.permit(:name, :username, :email, :password, :password_confirmation)
     end
 end

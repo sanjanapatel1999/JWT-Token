@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  product_name: MyString
+  description: MyText
+  actual_price: 1.5
+  current_price: 1.5
+  supplier: one
+
+two:
+  product_name: MyString
+  description: MyText
+  actual_price: 1.5
+  current_price: 1.5
+  supplier: two

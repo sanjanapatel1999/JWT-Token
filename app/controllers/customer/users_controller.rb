@@ -1,6 +1,7 @@
-class UsersController < ApplicationController
+class Customer::UsersController < ApplicationController
+
     before_action :authorize_request, except: :create
-    before_action :find_user, except: %i[create index]
+    before_action :find_user, except: %i[create index destroy]
   
     # GET /users
     def index
@@ -34,7 +35,9 @@ class UsersController < ApplicationController
   
     # DELETE /users/{username}
     def destroy
+      @user = User.find_by_username!(params[:_username])
       @user.destroy
+      render json: "deleted sucessfully ..........................", status: :ok
     end
   
     private
@@ -47,7 +50,7 @@ class UsersController < ApplicationController
   
     def user_params
       params.permit(
-        :avatar, :name, :username, :email, :password, :password_confirmation
+         :name, :username, :email, :password, :password_confirmation
       )
     end
 end
